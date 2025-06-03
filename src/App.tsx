@@ -1,11 +1,15 @@
 import { Routes } from "react-router";
 import Sidebar from "./components/Sidebar/Sidebar";
+import Note from "./components/Note/Note";
 
 function App() {
   return (
-    <div>
+    <div className="flex h-screen">
       <Sidebar />
-      <div>{/* <Routes></Routes> */}</div>
+      <div className="flex-grow p-4 overflow-auto">
+        <Note />
+        {/* <Routes></Routes> */}
+      </div>
     </div>
   );
 }

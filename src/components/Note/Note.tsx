@@ -1,5 +1,5 @@
 const Note = () => {
-  return <div>Note</div>;
+  return <div className="border-1">Note</div>;
 };
 
 export default Note;
