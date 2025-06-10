@@ -1,12 +1,9 @@
 import 'draft-js/dist/Draft.css';
 
-import { Editor, EditorState } from 'draft-js';
+import { Editor } from 'draft-js';
 import { useEffect, useRef } from 'react';
 
-interface NoteProps {
-  editorState: EditorState;
-  onChange: (newState: EditorState) => void;
-}
+import type { NoteProps } from './types.ts';
 
 const Note = ({ editorState, onChange }: NoteProps) => {
   const editorRef = useRef<Editor | null>(null);
