@@ -7,5 +7,8 @@ export default defineConfig({
   plugins: [react(), tailwindcss(), tsconfigPaths()],
   build: {
     sourcemap: true
+  },
+  define: {
+    global: 'window'
   }
 });
