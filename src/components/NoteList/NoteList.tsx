@@ -1,18 +1,44 @@
+import { times } from 'es-toolkit/compat';
+import { useState } from 'react';
+import { FaTrash } from 'react-icons/fa';
+import { v4 as uuidv4 } from 'uuid';
+
+const ids = times(10, () => uuidv4());
+
 const NoteList = () => {
+  const [activeId, setActiveId] = useState<string | null>(null);
+
   return (
-    <div>
-      <ul>
-        <li>note 1</li>
-        <li>note 2</li>
-        <li>note 3</li>
-        <li>note 4</li>
-        <li>note 5</li>
-        <li>note 6</li>
-        <li>note 7</li>
-        <li>note 8</li>
-        <li>note 9</li>
+    <>
+      <div className="max-w-md mx-auto flex justify-end p-2">
+        <button
+          type="button"
+          aria-label="Delete item"
+          disabled={!activeId}
+          className={`transition-colors ${
+            activeId ? 'text-red-500 cursor-pointer' : 'text-gray-400 cursor-not-allowed'
+          } hover:text-red-500`}
+        >
+          <FaTrash size={20} />
+        </button>
+      </div>
+      <ul className="max-w-md mx-auto bg-gray-900 rounded-md shadow-md divide-y divide-gray-700">
+        {ids.map((id, index) => {
+          const isActive = activeId === id;
+          return (
+            <li
+              key={id}
+              onClick={() => setActiveId(id)}
+              className={`px-4 py-2 cursor-pointer select-none transition-colors duration-200 ${
+                isActive ? 'bg-gray-700 text-white' : 'text-gray-200 hover:bg-gray-800'
+              }`}
+            >
+              {`note ${index + 1}`}
+            </li>
+          );
+        })}
       </ul>
-    </div>
+    </>
   );
 };
 
