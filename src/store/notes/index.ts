@@ -1,21 +1,18 @@
 import { createSlice } from '@reduxjs/toolkit';
+import { ContentState, convertToRaw } from 'draft-js';
 import { rest } from 'services/rest';
+import type { RootState, TNote, TNoteApiResponse, TSelectNotes } from 'types';
 import { type AppDispatch } from 'types';
 
 import { INITIAL_STATE } from './constants.ts';
-import type { TSelectNoteData } from './types.ts';
 /**
  * Reducer
  */
 const { reducer, actions } = createSlice({
-  name: 'creationNote',
+  name: 'notes',
   initialState: INITIAL_STATE,
   reducers: {
-    saveData: (state, { payload: { id, title, description } }) => {
-      state.id = id;
-      state.title = title;
-      state.description = description;
-    },
+    saveNotes: (_state: RootState, { payload }: { payload: TNote[] }) => payload,
     resetData: () => INITIAL_STATE
   }
 });
@@ -24,21 +21,26 @@ export default reducer;
 /**
  * Selectors
  */
-export const selectNoteData: TSelectNoteData = ({ singleNote: { title, description } }) => ({
-  title,
-  description
-});
+export const selectNotes: TSelectNotes = (state: RootState) => state.notes;
 /**
  * Actions
  */
-export const { saveData } = actions;
+export const { saveNotes } = actions;
 /**
  * Dispatchers
  */
-export const handleGetNoteData =
-  (id: string) =>
+export const handleGetNotes =
+  () =>
   async (dispatch: AppDispatch): Promise<void> => {
-    const response = await rest.get(`/SOME_REQUEST/${id}`);
+    const response = await rest.get<{ notes: TNoteApiResponse[] }>(
+      `http://localhost:3000/api/notes`
+    );
 
-    dispatch(saveData(response));
+    const normalizedNotes: TNote[] = response.notes.map((note) => ({
+      id: note._id,
+      title: note.title,
+      content: convertToRaw(ContentState.createFromText(note.content || ''))
+    }));
+
+    dispatch(saveNotes(normalizedNotes));
   };
