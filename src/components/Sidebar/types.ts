@@ -5,5 +5,4 @@ export type SidebarProps = {
   activeId: string | null;
   setActiveId: (id: string) => void;
   onDelete: (id: string) => void;
-  onCreate: () => void;
 };

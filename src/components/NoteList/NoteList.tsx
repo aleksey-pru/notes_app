@@ -1,14 +1,20 @@
+import { useCallback } from 'react';
 import { FaTrash } from 'react-icons/fa';
 import { RiAddLargeFill } from 'react-icons/ri';
-import type { TNote } from 'types';
+import type { TNoteWithEditorState } from 'types';
 
+import { useAppDispatch } from '../../hooks/useAppDispatch';
 import type { NoteListProps } from './types.ts';
 
-const NoteList = ({ notes, activeId, setActiveId, onDelete, onCreate }: NoteListProps) => {
+const NoteList = ({ notes, activeId, setActiveId, onDelete }: NoteListProps) => {
+  const dispatch = useAppDispatch();
+  const handleCreate = useCallback(() => {
+    console.log('use dispatch to create note');
+  }, [dispatch]);
   return (
     <>
       <div className="max-w-md mx-auto flex justify-end p-2">
-        <button type="button" className="cursor-pointer" onClick={() => onCreate()}>
+        <button type="button" className="cursor-pointer" onClick={handleCreate}>
           <RiAddLargeFill size={20} />
         </button>
         <button
@@ -24,7 +30,7 @@ const NoteList = ({ notes, activeId, setActiveId, onDelete, onCreate }: NoteList
         </button>
       </div>
       <ul className="max-w-md mx-auto bg-stone-800 rounded-md shadow-md divide-y divide-gray-700">
-        {notes.map(({ id, title }: TNote) => {
+        {notes.map(({ id, title }: TNoteWithEditorState) => {
           const isActive = activeId === id;
           return (
             <li

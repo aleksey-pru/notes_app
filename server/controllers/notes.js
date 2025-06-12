@@ -10,11 +10,7 @@ export const createNote = async (req, res) => {
       content
     });
     await newNote.save();
-    res.status(201).json({
-      id: newNote._id,
-      title: newNote.title,
-      content: newNote.content
-    });
+
     res.json(newNote);
   } catch (error) {
     res.json({ message: error.message });

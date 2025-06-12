@@ -1,5 +1,5 @@
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { ContentState, convertToRaw, RawDraftContentState } from 'draft-js';
+import { createSlice } from '@reduxjs/toolkit';
+import { ContentState, convertToRaw } from 'draft-js';
 import { rest } from 'services/rest';
 import type { RootState, TNote, TNoteApiResponse, TSelectNotes } from 'types';
 import { type AppDispatch } from 'types';
@@ -13,12 +13,10 @@ const { reducer, actions } = createSlice({
   initialState: INITIAL_STATE,
   reducers: {
     saveNotes: (_state: RootState, { payload }: { payload: TNote[] }) => payload,
+    addNote: (_state: RootState, { payload }: { payload: TNote }) => {
+      // todo: save new note
+    },
     resetData: () => INITIAL_STATE
-  },
-  extraReducers: (builder) => {
-    builder.addCase(createNote.fulfilled, (state, action) => {
-      state.push(action.payload);
-    });
   }
 });
 
@@ -30,7 +28,7 @@ export const selectNotes: TSelectNotes = (state: RootState) => state.notes;
 /**
  * Actions
  */
-export const { saveNotes } = actions;
+export const { saveNotes, addNote } = actions;
 /**
  * Dispatchers
  */
@@ -50,17 +48,10 @@ export const handleGetNotes =
     dispatch(saveNotes(normalizedNotes));
   };
 
-export const createNote = createAsyncThunk<TNote, { title: string; content: RawDraftContentState }>(
-  'notes/createNote',
-  async ({ title, content }) => {
-    const response = await rest.post('http://localhost:3000/api/notes', {
-      title,
-      content
-    });
-    return {
-      id: response._id,
-      title: response.title,
-      content: content
-    };
-  }
-);
+export const handleCreateNote =
+  () =>
+  async (dispatch: AppDispatch): Promise<void> => {
+    // todo: add the request to create note
+    // normalize the response for content @convertToRaw(ContentState.createFromText(''))
+    //dispatch into addNote
+  };
