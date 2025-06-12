@@ -1,4 +1,4 @@
-import { convertFromRaw, EditorState } from 'draft-js';
+import { ContentState, convertFromRaw, convertToRaw, EditorState } from 'draft-js';
 import { useEffect, useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
 import type { TNoteItem } from 'types';
@@ -6,7 +6,7 @@ import type { TNoteItem } from 'types';
 import Note from './components/Note/Note';
 import Sidebar from './components/Sidebar/Sidebar';
 import { useAppDispatch } from './hooks/useAppDispatch';
-import { handleGetNotes, selectNotes } from './store/notes';
+import { createNote, handleGetNotes, selectNotes } from './store/notes';
 
 const App = () => {
   const dispatch = useAppDispatch();
@@ -26,6 +26,18 @@ const App = () => {
 
   const [activeId, setActiveId] = useState<string | null>(null);
   const activeNote = activeId ? notes[activeId] : undefined;
+
+  const handleCreateNote = async () => {
+    const title = `Note ${Date.now()}`;
+    const contentState = ContentState.createFromText('');
+    const rawContent = convertToRaw(contentState);
+    try {
+      const response = await dispatch(createNote({ title, content: rawContent }));
+      console.log('Note created:', response);
+    } catch (error) {
+      console.log('Error creating note:', error);
+    }
+  };
 
   const handleChangeNoteContent = (newContent: EditorState) => {
     // todo: add logic for dispatching new content
@@ -52,6 +64,7 @@ const App = () => {
         activeId={activeId}
         setActiveId={setActiveId}
         onDelete={handleDelete}
+        onCreate={handleCreateNote}
       />
       <div className="flex-grow p-4 overflow-auto bg-stone-300">
         {activeNote ? (

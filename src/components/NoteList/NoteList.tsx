@@ -1,12 +1,16 @@
 import { FaTrash } from 'react-icons/fa';
+import { RiAddLargeFill } from 'react-icons/ri';
 import type { TNote } from 'types';
 
 import type { NoteListProps } from './types.ts';
 
-const NoteList = ({ notes, activeId, setActiveId, onDelete }: NoteListProps) => {
+const NoteList = ({ notes, activeId, setActiveId, onDelete, onCreate }: NoteListProps) => {
   return (
     <>
       <div className="max-w-md mx-auto flex justify-end p-2">
+        <button type="button" className="cursor-pointer" onClick={() => onCreate()}>
+          <RiAddLargeFill size={20} />
+        </button>
         <button
           type="button"
           aria-label="Delete item"
