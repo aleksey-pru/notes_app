@@ -3,5 +3,14 @@
   "references": [
     { "path": "./tsconfig.app.json" },
     { "path": "./tsconfig.node.json" }
-  ]
+  ],
+  "include": ["src/**/*"],
+  "exclude": ["node_modules"],
+  "compilerOptions": {
+    "removeComments": true,
+    "lib": ["esnext"]
+  },
+  "ts-node": {
+    "esm": true
+  }
 }

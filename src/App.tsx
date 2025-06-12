@@ -1,51 +1,49 @@
-import { EditorState } from 'draft-js';
-import { times } from 'es-toolkit/compat';
-import { useState } from 'react';
-import type { TNote, TNoteItem } from 'types';
-import { v4 as uuidv4 } from 'uuid';
+import { convertFromRaw, EditorState } from 'draft-js';
+import { useEffect, useMemo, useState } from 'react';
+import { useSelector } from 'react-redux';
+import type { TNoteItem } from 'types';
 
 import Note from './components/Note/Note';
 import Sidebar from './components/Sidebar/Sidebar';
-
-const initialNotes: TNote[] = times(10, (i) => ({
-  id: uuidv4(),
-  title: `note ${i + 1}`,
-  content: EditorState.createEmpty()
-}));
+import { useAppDispatch } from './hooks/useAppDispatch';
+import { handleGetNotes, selectNotes } from './store/notes';
 
 const App = () => {
-  const [notes, setNotes] = useState<TNoteItem>(() => {
-    return initialNotes.reduce((acc, note) => {
-      acc[note.id] = note;
+  const dispatch = useAppDispatch();
+  const notesArray = useSelector(selectNotes);
+
+  const notes = useMemo(() => {
+    return notesArray.reduce((acc, note) => {
+      acc[note.id] = {
+        ...note,
+        content: note.content
+          ? EditorState.createWithContent(convertFromRaw(note.content))
+          : EditorState.createEmpty()
+      };
       return acc;
     }, {} as TNoteItem);
-  });
+  }, [notesArray]);
 
-  const [activeId, setActiveId] = useState<string | null>(initialNotes[0]?.id ?? null);
-
+  const [activeId, setActiveId] = useState<string | null>(null);
   const activeNote = activeId ? notes[activeId] : undefined;
 
   const handleChangeNoteContent = (newContent: EditorState) => {
-    if (!activeId) return;
-    setNotes((prev) => ({
-      ...prev,
-      [activeId]: {
-        ...prev[activeId],
-        content: newContent
-      }
-    }));
+    // todo: add logic for dispatching new content
+    console.log(newContent);
   };
 
   const handleDelete = (id: string) => {
-    setNotes((prev) => {
-      const newNotes = { ...prev };
-      delete newNotes[id];
-      return newNotes;
-    });
-    if (activeId === id) {
-      setActiveId(null);
-    }
+    // todo: add logic for dispatching remove note by id
+    setActiveId((prevId) => (prevId === id ? null : prevId));
   };
+
+  useEffect(() => {
+    try {
+      dispatch(handleGetNotes());
+    } catch (error) {
+      console.log(error);
+    }
+  }, [dispatch]);
 
   return (
     <div className="flex h-screen">
