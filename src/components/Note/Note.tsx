@@ -13,7 +13,7 @@ const Note = ({ editorState, onChange }: NoteProps) => {
   }, [editorState]);
 
   return (
-    <div className="border min-h-[100px] p-2 bg-stone-50 text-stone-600 rounded">
+    <div className="min-h-[100px] p-2 text-stone-600 rounded">
       <Editor
         ref={editorRef}
         editorState={editorState}
