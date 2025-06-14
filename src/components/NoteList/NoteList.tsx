@@ -24,24 +24,22 @@ const NoteList = ({ notes, activeId, setActiveId, onDelete }: NoteListProps) => 
         {notes.map(({ id, title, createdAt }: TNote) => {
           const isActive = activeId === id;
           return (
-            <>
-              <li
-                key={id}
-                onClick={() => setActiveId(id)}
-                className={`px-4 py-2 cursor-pointer select-none transition-colors duration-200 ${
-                  isActive
-                    ? 'bg-stone-500 text-black rounded-md font-bold'
-                    : 'text-gray-200 hover:bg-stone-500 rounded-md'
-                }`}
+            <li
+              key={id}
+              onClick={() => setActiveId(id)}
+              className={`px-4 py-2 cursor-pointer select-none transition-colors duration-200 ${
+                isActive
+                  ? 'bg-stone-500 text-black rounded-md font-bold'
+                  : 'text-gray-200 hover:bg-stone-500 rounded-md'
+              }`}
+            >
+              {title}
+              <span
+                className={`block text-xs transition-colors duration-200, ${isActive ? 'text-black' : 'text-white'}`}
               >
-                {title}
-                <span
-                  className={`block text-xs transition-colors duration-200, ${isActive ? 'text-black' : 'text-white'}`}
-                >
-                  {formatNoteDate(createdAt)}
-                </span>
-              </li>
-            </>
+                {formatNoteDate(createdAt)}
+              </span>
+            </li>
           );
         })}
       </ul>
