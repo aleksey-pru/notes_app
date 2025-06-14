@@ -48,7 +48,8 @@ export const handleGetNotes =
     const normalizedNotes: TNote[] = response.notes.map((note) => ({
       id: note._id,
       title: note.title,
-      content: convertToRaw(ContentState.createFromText(note.content || ''))
+      content: convertToRaw(ContentState.createFromText(note.content || '')),
+      createdAt: note?.createdAt
     }));
 
     dispatch(saveNotes(normalizedNotes));

@@ -6,14 +6,15 @@ export type TNoteApiResponse = {
   _id: string;
   title: string;
   content: string;
-  createdAt: string;
-  updatedAt: string;
+  createdAt: Date;
+  updatedAt: Date;
 };
 
 export type TNote = {
   id: string;
   title: string;
   content: RawDraftContentState;
+  createdAt: Date;
 };
 
 export type TNoteWithEditorState = Omit<TNote, 'content'> & {

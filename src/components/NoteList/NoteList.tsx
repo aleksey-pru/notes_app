@@ -7,6 +7,7 @@ import type { TNoteWithEditorState } from 'types';
 import { useAppDispatch } from '../../hooks/useAppDispatch';
 import { handleCreateNote } from '../../store/notes';
 import type { NoteListProps } from './types.ts';
+import { formatNoteDate } from './utils';
 
 const NoteList = ({ notes, activeId, setActiveId, onDelete }: NoteListProps) => {
   const dispatch = useAppDispatch();
@@ -48,10 +49,17 @@ const NoteList = ({ notes, activeId, setActiveId, onDelete }: NoteListProps) => 
               key={id}
               onClick={() => setActiveId(id)}
               className={`px-4 py-2 cursor-pointer select-none transition-colors duration-200 ${
-                isActive ? 'bg-stone-500 text-white' : 'text-gray-200 hover:bg-stone-500'
+                isActive
+                  ? 'bg-stone-500 text-black rounded-md font-bold'
+                  : 'text-gray-200 hover:bg-stone-500 rounded-md'
               }`}
             >
               {title}
+              <span
+                className={`block text-xs transition-colors duration-200, ${isActive ? 'text-black' : 'text-white'}`}
+              >
+                {formatNoteDate(createdAt)}
+              </span>
             </li>
           );
         })}
