@@ -1,12 +1,18 @@
-import { convertFromRaw, convertToRaw, EditorState } from 'draft-js';
-import { useEffect, useMemo, useState } from 'react';
+import { ContentState, convertFromRaw, convertToRaw, EditorState } from 'draft-js';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
 import type { TNoteItem } from 'types';
 
 import Note from './components/Note/Note';
 import Sidebar from './components/Sidebar/Sidebar';
 import { useAppDispatch } from './hooks/useAppDispatch';
-import { handleDeleteNote, handleGetNotes, handleUpdateNote, selectNotes } from './store/notes';
+import {
+  handleCreateNote,
+  handleDeleteNote,
+  handleGetNotes,
+  handleUpdateNote,
+  selectNotes
+} from './store/notes';
 
 const App = () => {
   const dispatch = useAppDispatch();
@@ -28,14 +34,24 @@ const App = () => {
   const [activeId, setActiveId] = useState<string | null>(null);
   const activeNote = activeId ? notes[activeId] : undefined;
 
+  const handleCreate = useCallback(() => {
+    const title = `Note ${Date.now()}`;
+    const contentState = ContentState.createFromText('');
+    const plainText = contentState.getPlainText();
+
+    dispatch(handleCreateNote(title, plainText));
+    console.log('use dispatch to create note');
+  }, [dispatch]);
+
   const handleDelete = (id: string) => {
     dispatch(handleDeleteNote(id));
+    dispatch(handleGetNotes());
     setActiveId((prevId) => (prevId === id ? null : prevId));
   };
 
   const handleChangeNoteContent = (newContent: EditorState) => {
     const id = activeId;
-
+    console.log(activeNote.content);
     setEditorState(newContent);
     const content = newContent.getCurrentContent();
     const rawContent = convertToRaw(content);
@@ -58,11 +74,11 @@ const App = () => {
         activeId={activeId}
         setActiveId={setActiveId}
         onDelete={handleDelete}
-        // onCreate={handleCreateNote}
+        onCreate={handleCreate}
       />
       <div className="flex-grow p-4 overflow-auto bg-stone-300">
         {activeNote ? (
-          <Note editorState={editorState} onChange={handleChangeNoteContent} />
+          <Note editorState={activeNote.content} onChange={handleChangeNoteContent} />
         ) : (
           <div className="text-gray-400">Select a note</div>
         )}

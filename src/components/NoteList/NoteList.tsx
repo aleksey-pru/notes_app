@@ -1,32 +1,19 @@
-import { ContentState, convertToRaw, EditorState } from 'draft-js';
-import { useCallback } from 'react';
 import { FaEdit, FaTrash } from 'react-icons/fa';
 import { RiAddLargeFill } from 'react-icons/ri';
 import type { TNoteWithEditorState } from 'types';
 
 import { useAppDispatch } from '../../hooks/useAppDispatch';
-import { handleCreateNote } from '../../store/notes';
 import type { NoteListProps } from './types.ts';
 import { formatNoteDate } from './utils';
 
-const NoteList = ({ notes, activeId, setActiveId, onDelete }: NoteListProps) => {
-  const dispatch = useAppDispatch();
-  const handleCreate = useCallback(() => {
-    const title = `Note ${Date.now()}`;
-    const contentState = ContentState.createFromText('');
-    const plainText = contentState.getPlainText();
-
-    dispatch(handleCreateNote(title, plainText));
-    console.log('use dispatch to create note');
-  }, [dispatch]);
-
+const NoteList = ({ notes, activeId, setActiveId, onDelete, onCreate }: NoteListProps) => {
   return (
     <>
       <div className="max-w-md mx-auto flex justify-end p-2 gap-5">
         <button className="cursor-pointer">
           <FaEdit size={20} />
         </button>
-        <button type="button" className="cursor-pointer" onClick={handleCreate}>
+        <button type="button" className="cursor-pointer" onClick={onCreate}>
           <RiAddLargeFill size={20} />
         </button>
         <button

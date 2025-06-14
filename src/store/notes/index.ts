@@ -16,12 +16,6 @@ const { reducer, actions } = createSlice({
     addNote: (_state: RootState, { payload }: { payload: TNote }) => {
       _state.push(payload);
     },
-    deleteNote: (_state: RootState, { payload }: { payload: string }) => {
-      return _state.filter((note) => note.id !== payload);
-    },
-    updateNote: (_state: RootState, { payload }) => {
-      return _state.map((note) => (note.id === payload.id ? { ...note, ...payload } : note));
-    },
     resetData: () => INITIAL_STATE
   }
 });
@@ -34,7 +28,7 @@ export const selectNotes: TSelectNotes = (state: RootState) => state.notes;
 /**
  * Actions
  */
-export const { saveNotes, addNote, deleteNote } = actions;
+export const { saveNotes, addNote } = actions;
 /**
  * Dispatchers
  */
@@ -73,7 +67,6 @@ export const handleDeleteNote =
   (id: string) =>
   async (dispatch: AppDispatch): Promise<void> => {
     const response = await rest.delete(`http://localhost:3000/api/notes/${id}`);
-    dispatch(deleteNote(id));
   };
 
 export const handleUpdateNote =
