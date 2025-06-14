@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { ContentState, convertToRaw } from 'draft-js';
+import { ContentState, convertToRaw, RawDraftContentState } from 'draft-js';
 import { rest } from 'services/rest';
 import type { RootState, TNote, TNoteApiResponse, TSelectNotes } from 'types';
 import { type AppDispatch } from 'types';
@@ -16,6 +16,9 @@ const { reducer, actions } = createSlice({
     addNote: (_state: RootState, { payload }: { payload: TNote }) => {
       _state.push(payload);
     },
+    deleteNote: (_state: RootState, { payload }: { payload: string }) => {
+      return _state.filter((note) => note.id !== payload);
+    },
     resetData: () => INITIAL_STATE
   }
 });
@@ -28,7 +31,7 @@ export const selectNotes: TSelectNotes = (state: RootState) => state.notes;
 /**
  * Actions
  */
-export const { saveNotes, addNote } = actions;
+export const { saveNotes, addNote, deleteNote } = actions;
 /**
  * Dispatchers
  */
@@ -60,4 +63,11 @@ export const handleCreateNote =
     };
 
     dispatch(addNote(normalizedNotes));
+  };
+
+export const handleDeleteNote =
+  (id: string) =>
+  async (dispatch: AppDispatch): Promise<void> => {
+    const response = await rest.delete(`http://localhost:3000/api/notes/${id}`);
+    dispatch(deleteNote(id));
   };

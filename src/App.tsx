@@ -6,7 +6,7 @@ import type { TNoteItem } from 'types';
 import Note from './components/Note/Note';
 import Sidebar from './components/Sidebar/Sidebar';
 import { useAppDispatch } from './hooks/useAppDispatch';
-import { handleGetNotes, selectNotes } from './store/notes';
+import { handleDeleteNote, handleGetNotes, selectNotes } from './store/notes';
 
 const App = () => {
   const dispatch = useAppDispatch();
@@ -33,7 +33,7 @@ const App = () => {
   };
 
   const handleDelete = (id: string) => {
-    // todo: add logic for dispatching remove note by id
+    dispatch(handleDeleteNote(id));
     setActiveId((prevId) => (prevId === id ? null : prevId));
   };
 
