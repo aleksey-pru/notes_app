@@ -14,7 +14,7 @@ const { reducer, actions } = createSlice({
   reducers: {
     saveNotes: (_state: RootState, { payload }: { payload: TNote[] }) => payload,
     addNote: (_state: RootState, { payload }: { payload: TNote }) => {
-      // todo: save new note
+      _state.push(payload);
     },
     resetData: () => INITIAL_STATE
   }
@@ -49,9 +49,15 @@ export const handleGetNotes =
   };
 
 export const handleCreateNote =
-  () =>
+  (title: string, content: RawDraftContentState) =>
   async (dispatch: AppDispatch): Promise<void> => {
-    // todo: add the request to create note
-    // normalize the response for content @convertToRaw(ContentState.createFromText(''))
-    //dispatch into addNote
+    const response = await rest.post('http://localhost:3000/api/notes', { title, content });
+
+    const normalizedNotes: TNote = {
+      id: response._id,
+      title: response.title,
+      content: convertToRaw(ContentState.createFromText(''))
+    };
+
+    dispatch(addNote(normalizedNotes));
   };

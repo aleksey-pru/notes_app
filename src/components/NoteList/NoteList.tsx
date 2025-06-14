@@ -1,14 +1,21 @@
+import { ContentState, convertToRaw } from 'draft-js';
 import { useCallback } from 'react';
 import { FaTrash } from 'react-icons/fa';
 import { RiAddLargeFill } from 'react-icons/ri';
 import type { TNoteWithEditorState } from 'types';
 
 import { useAppDispatch } from '../../hooks/useAppDispatch';
+import { handleCreateNote } from '../../store/notes';
 import type { NoteListProps } from './types.ts';
 
 const NoteList = ({ notes, activeId, setActiveId, onDelete }: NoteListProps) => {
   const dispatch = useAppDispatch();
   const handleCreate = useCallback(() => {
+    const title = `Note ${Date.now()}`;
+    const contentState = ContentState.createFromText('');
+    const plainText = contentState.getPlainText();
+
+    dispatch(handleCreateNote(title, plainText));
     console.log('use dispatch to create note');
   }, [dispatch]);
   return (
