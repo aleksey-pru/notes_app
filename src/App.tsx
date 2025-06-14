@@ -1,4 +1,4 @@
-import { convertFromRaw, EditorState } from 'draft-js';
+import { convertFromRaw, convertToRaw, EditorState } from 'draft-js';
 import { useEffect, useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
 import type { TNoteItem } from 'types';
@@ -6,10 +6,11 @@ import type { TNoteItem } from 'types';
 import Note from './components/Note/Note';
 import Sidebar from './components/Sidebar/Sidebar';
 import { useAppDispatch } from './hooks/useAppDispatch';
-import { handleDeleteNote, handleGetNotes, selectNotes } from './store/notes';
+import { handleDeleteNote, handleGetNotes, handleUpdateNote, selectNotes } from './store/notes';
 
 const App = () => {
   const dispatch = useAppDispatch();
+  const [editorState, setEditorState] = useState<EditorState>(EditorState.createEmpty());
   const notesArray = useSelector(selectNotes);
 
   const notes = useMemo(() => {
@@ -27,14 +28,19 @@ const App = () => {
   const [activeId, setActiveId] = useState<string | null>(null);
   const activeNote = activeId ? notes[activeId] : undefined;
 
-  const handleChangeNoteContent = (newContent: EditorState) => {
-    // todo: add logic for dispatching new content
-    console.log(newContent);
-  };
-
   const handleDelete = (id: string) => {
     dispatch(handleDeleteNote(id));
     setActiveId((prevId) => (prevId === id ? null : prevId));
+  };
+
+  const handleChangeNoteContent = (newContent: EditorState) => {
+    const id = activeId;
+
+    setEditorState(newContent);
+    const content = newContent.getCurrentContent();
+    const rawContent = convertToRaw(content);
+    dispatch(handleUpdateNote(id, rawContent));
+    console.log(content.getPlainText());
   };
 
   useEffect(() => {
@@ -56,7 +62,7 @@ const App = () => {
       />
       <div className="flex-grow p-4 overflow-auto bg-stone-300">
         {activeNote ? (
-          <Note editorState={activeNote.content} onChange={handleChangeNoteContent} />
+          <Note editorState={editorState} onChange={handleChangeNoteContent} />
         ) : (
           <div className="text-gray-400">Select a note</div>
         )}

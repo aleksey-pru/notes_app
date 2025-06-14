@@ -19,6 +19,9 @@ const { reducer, actions } = createSlice({
     deleteNote: (_state: RootState, { payload }: { payload: string }) => {
       return _state.filter((note) => note.id !== payload);
     },
+    updateNote: (_state: RootState, { payload }) => {
+      return _state.map((note) => (note.id === payload.id ? { ...note, ...payload } : note));
+    },
     resetData: () => INITIAL_STATE
   }
 });
@@ -70,4 +73,10 @@ export const handleDeleteNote =
   async (dispatch: AppDispatch): Promise<void> => {
     const response = await rest.delete(`http://localhost:3000/api/notes/${id}`);
     dispatch(deleteNote(id));
+  };
+
+export const handleUpdateNote =
+  (id: string | null, content: RawDraftContentState, title?: string) =>
+  async (dispatch: AppDispatch): Promise<void> => {
+    const response = await rest.put(`http://localhost:3000/api/notes/${id}`, { title, content });
   };
