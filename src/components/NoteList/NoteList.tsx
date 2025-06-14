@@ -2,7 +2,6 @@ import { FaEdit, FaTrash } from 'react-icons/fa';
 import { RiAddLargeFill } from 'react-icons/ri';
 import type { TNoteWithEditorState } from 'types';
 
-import { useAppDispatch } from '../../hooks/useAppDispatch';
 import type { NoteListProps } from './types.ts';
 import { formatNoteDate } from './utils';
 
