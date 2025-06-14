@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { ContentState, convertToRaw } from 'draft-js';
+import { ContentState, convertToRaw, RawDraftContentState } from 'draft-js';
 import { rest } from 'services/rest';
 import type { RootState, TNote, TNoteApiResponse, TSelectNotes } from 'types';
 import { type AppDispatch } from 'types';
@@ -13,6 +13,9 @@ const { reducer, actions } = createSlice({
   initialState: INITIAL_STATE,
   reducers: {
     saveNotes: (_state: RootState, { payload }: { payload: TNote[] }) => payload,
+    addNote: (_state: RootState, { payload }: { payload: TNote }) => {
+      _state.push(payload);
+    },
     resetData: () => INITIAL_STATE
   }
 });
@@ -25,7 +28,7 @@ export const selectNotes: TSelectNotes = (state: RootState) => state.notes;
 /**
  * Actions
  */
-export const { saveNotes } = actions;
+export const { saveNotes, addNote } = actions;
 /**
  * Dispatchers
  */
@@ -44,4 +47,30 @@ export const handleGetNotes =
     }));
 
     dispatch(saveNotes(normalizedNotes));
+  };
+
+export const handleCreateNote =
+  (title: string, content: RawDraftContentState) =>
+  async (dispatch: AppDispatch): Promise<void> => {
+    const response = await rest.post('http://localhost:3000/api/notes', { title, content });
+
+    const normalizedNotes: TNote = {
+      id: response._id,
+      title: response.title,
+      content: convertToRaw(ContentState.createFromText(''))
+    };
+
+    dispatch(addNote(normalizedNotes));
+  };
+
+export const handleDeleteNote =
+  (id: string) =>
+  async (dispatch: AppDispatch): Promise<void> => {
+    const response = await rest.delete(`http://localhost:3000/api/notes/${id}`);
+  };
+
+export const handleUpdateNote =
+  (id: string | null, content: RawDraftContentState, title?: string) =>
+  async (dispatch: AppDispatch): Promise<void> => {
+    const response = await rest.put(`http://localhost:3000/api/notes/${id}`, { title, content });
   };
