@@ -13,9 +13,6 @@ const { reducer, actions } = createSlice({
   initialState: INITIAL_STATE,
   reducers: {
     saveNotes: (_state: RootState, { payload }: { payload: TNote[] }) => payload,
-    addNote: (_state: RootState, { payload }: { payload: TNote }) => {
-      _state.push(payload);
-    },
     resetData: () => INITIAL_STATE
   }
 });
@@ -28,7 +25,7 @@ export const selectNotes: TSelectNotes = (state: RootState) => state.notes;
 /**
  * Actions
  */
-export const { saveNotes, addNote } = actions;
+export const { saveNotes } = actions;
 /**
  * Dispatchers
  */
@@ -60,13 +57,14 @@ export const handleCreateNote =
       content: convertToRaw(ContentState.createFromText(''))
     };
 
-    dispatch(addNote(normalizedNotes));
+    dispatch(handleGetNotes(normalizedNotes));
   };
 
 export const handleDeleteNote =
   (id: string) =>
   async (dispatch: AppDispatch): Promise<void> => {
     const response = await rest.delete(`http://localhost:3000/api/notes/${id}`);
+    dispatch(handleGetNotes());
   };
 
 export const handleUpdateNote =

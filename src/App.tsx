@@ -16,7 +16,6 @@ import {
 
 const App = () => {
   const dispatch = useAppDispatch();
-  const [editorState, setEditorState] = useState<EditorState>(EditorState.createEmpty());
   const notesArray = useSelector(selectNotes);
 
   const notes = useMemo(() => {
@@ -45,14 +44,12 @@ const App = () => {
 
   const handleDelete = (id: string) => {
     dispatch(handleDeleteNote(id));
-    dispatch(handleGetNotes());
     setActiveId((prevId) => (prevId === id ? null : prevId));
   };
 
   const handleChangeNoteContent = (newContent: EditorState) => {
     const id = activeId;
     console.log(activeNote.content);
-    setEditorState(newContent);
     const content = newContent.getCurrentContent();
     const rawContent = convertToRaw(content);
     dispatch(handleUpdateNote(id, rawContent));

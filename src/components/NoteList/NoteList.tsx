@@ -3,7 +3,6 @@ import { RiAddLargeFill } from 'react-icons/ri';
 import type { TNoteWithEditorState } from 'types';
 
 import type { NoteListProps } from './types.ts';
-import { formatNoteDate } from './utils';
 
 const NoteList = ({ notes, activeId, setActiveId, onDelete, onCreate }: NoteListProps) => {
   return (
@@ -44,7 +43,7 @@ const NoteList = ({ notes, activeId, setActiveId, onDelete, onCreate }: NoteList
               <span
                 className={`block text-xs transition-colors duration-200, ${isActive ? 'text-black' : 'text-white'}`}
               >
-                {formatNoteDate(createdAt)}
+                {/*{formatNoteDate(createdAt)}*/}
               </span>
             </li>
           );
