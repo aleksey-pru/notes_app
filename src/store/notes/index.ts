@@ -1,4 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
+import { JSONContent } from '@tiptap/react';
 import { ContentState, convertToRaw, RawDraftContentState } from 'draft-js';
 import { rest } from 'services/rest';
 import type { RootState, TNote, TNoteApiResponse, TSelectNotes } from 'types';
@@ -39,7 +40,7 @@ export const handleGetNotes =
     const normalizedNotes: TNote[] = response.notes.map((note) => ({
       id: note._id,
       title: note.title,
-      content: convertToRaw(ContentState.createFromText(note.content || '')),
+      content: note.content ? JSON.parse(note.content) : { type: 'doc', content: [] },
       createdAt: note?.createdAt
     }));
 
@@ -47,17 +48,11 @@ export const handleGetNotes =
   };
 
 export const handleCreateNote =
-  (title: string, content: RawDraftContentState) =>
+  (title: string, content: string) =>
   async (dispatch: AppDispatch): Promise<void> => {
     const response = await rest.post('http://localhost:3000/api/notes', { title, content });
 
-    const normalizedNotes: TNote = {
-      id: response._id,
-      title: response.title,
-      content: convertToRaw(ContentState.createFromText(''))
-    };
-
-    dispatch(handleGetNotes(normalizedNotes));
+    dispatch(handleGetNotes());
   };
 
 export const handleDeleteNote =
@@ -68,7 +63,7 @@ export const handleDeleteNote =
   };
 
 export const handleUpdateNote =
-  (id: string | null, content: RawDraftContentState, title?: string) =>
+  (id: string | null, content: JSONContent, title?: string) =>
   async (dispatch: AppDispatch): Promise<void> => {
     const response = await rest.put(`http://localhost:3000/api/notes/${id}`, { title, content });
   };

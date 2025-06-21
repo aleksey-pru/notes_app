@@ -1,6 +1,7 @@
+import { JSONContent } from '@tiptap/react';
 import { EditorState } from 'draft-js';
 
 export type NoteProps = {
-  editorState: EditorState;
-  onChange: (newState: EditorState) => void;
+  content: JSONContent;
+  onUpdate: (newState: EditorState) => void;
 };

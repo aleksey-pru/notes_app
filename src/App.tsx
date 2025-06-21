@@ -1,4 +1,4 @@
-import { ContentState, convertFromRaw, convertToRaw, EditorState } from 'draft-js';
+import { JSONContent } from '@tiptap/react';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
 import type { TNoteItem } from 'types';
@@ -22,9 +22,7 @@ const App = () => {
     return notesArray.reduce((acc, note) => {
       acc[note.id] = {
         ...note,
-        content: note.content
-          ? EditorState.createWithContent(convertFromRaw(note.content))
-          : EditorState.createEmpty()
+        content: note.content || { type: 'doc', content: [] }
       };
       return acc;
     }, {} as TNoteItem);
@@ -35,10 +33,8 @@ const App = () => {
 
   const handleCreate = useCallback(() => {
     const title = `Note ${Date.now()}`;
-    const contentState = ContentState.createFromText('');
-    const plainText = contentState.getPlainText();
-
-    dispatch(handleCreateNote(title, plainText));
+    const emptyContent = '';
+    dispatch(handleCreateNote(title, emptyContent));
     console.log('use dispatch to create note');
   }, [dispatch]);
 
@@ -47,13 +43,20 @@ const App = () => {
     setActiveId((prevId) => (prevId === id ? null : prevId));
   };
 
-  const handleChangeNoteContent = (newContent: EditorState) => {
-    const id = activeId;
-    console.log(activeNote.content);
-    const content = newContent.getCurrentContent();
-    const rawContent = convertToRaw(content);
-    dispatch(handleUpdateNote(id, rawContent));
-    console.log(content.getPlainText());
+  // const handleChangeNoteContent = (newContent: EditorState) => {
+  //   const id = activeId;
+  //   console.log(activeNote.content);
+  //   const content = newContent.getCurrentContent();
+  //   const rawContent = convertToRaw(content);
+  //   dispatch(handleUpdateNote(id, rawContent));
+  //   console.log(content.getPlainText());
+  // };
+
+  const handleChangeNoteContent = (newContent: JSONContent) => {
+    if (activeId) {
+      console.log(newContent);
+      dispatch(handleUpdateNote(activeId, newContent));
+    }
   };
 
   useEffect(() => {
@@ -75,7 +78,7 @@ const App = () => {
       />
       <div className="flex-grow p-4 overflow-auto bg-stone-300">
         {activeNote ? (
-          <Note editorState={activeNote.content} onChange={handleChangeNoteContent} />
+          <Note content={activeNote.content} onUpdate={handleChangeNoteContent} />
         ) : (
           <div className="text-gray-400">Select a note</div>
         )}
