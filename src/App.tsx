@@ -31,9 +31,7 @@ const App = () => {
   const activeNote = activeId ? notes[activeId] : undefined;
 
   const handleCreate = useCallback(() => {
-    const title = `Note ${Date.now()}`;
-    const emptyContent = '';
-    dispatch(handleCreateNote(title, emptyContent));
+    dispatch(handleCreateNote());
     console.log('use dispatch to create note');
   }, [dispatch]);
 
