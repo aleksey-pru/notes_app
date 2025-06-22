@@ -48,7 +48,10 @@ export const handleGetNotes =
 export const handleCreateNote =
   () =>
   async (dispatch: AppDispatch): Promise<void> => {
-    await rest.post('http://localhost:3000/api/notes', { title: `Note ${new Date().toLocaleString()}`, content: '' });
+    await rest.post('http://localhost:3000/api/notes', {
+      title: `Note ${new Date().toLocaleString()}`,
+      content: ''
+    });
 
     dispatch(handleGetNotes());
   };
