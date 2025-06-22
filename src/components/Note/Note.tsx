@@ -2,38 +2,31 @@ import 'draft-js/dist/Draft.css';
 
 import { BubbleMenu, Editor, EditorContent, FloatingMenu, useEditor } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
-import { useEffect, useRef } from 'react';
+import { useRef } from 'react';
 
 import type { NoteProps } from './types.ts';
 
-const Note = ({ editorState, onUpdate }: NoteProps) => {
-  const editorRef = useRef<Editor | null>(null);
+const Note = ({ onUpdate }: NoteProps) => {
   const content = '<p></p>';
   const extensions = [StarterKit];
   const editor = useEditor({
     extensions,
     content: content || { type: 'doc', content: [] },
-    onUpdate: ({ editor }) => {
-      const json = editor.getJSON();
-      onUpdate(json);
-    },
     autofocus: true
   });
 
-  useEffect(() => {
-    editorRef.current?.focus();
-  }, [editorState]);
+  const handleBlur = () => {
+    if (editor) {
+      const text = editor.getText();
+      const json = editor.getJSON();
+      console.log('Blur, content:', json);
+      onUpdate(json);
+    }
+  };
 
   return (
     <div className="min-h-[100px] p-2 text-stone-600 rounded">
-      {/*<Editor*/}
-      {/*  ref={editorRef}*/}
-      {/*  editorState={editorState}*/}
-      {/*  onChange={onChange}*/}
-      {/*  placeholder="Write your note..."*/}
-      {/*/>*/}
-
-      <EditorContent editor={editor} />
+      <EditorContent editor={editor} onBlur={handleBlur} />
       {editor && (
         <>
           <FloatingMenu editor={editor}>This is the floating menu</FloatingMenu>

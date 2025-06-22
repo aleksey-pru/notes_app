@@ -1,6 +1,4 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { JSONContent } from '@tiptap/react';
-import { ContentState, convertToRaw, RawDraftContentState } from 'draft-js';
 import { rest } from 'services/rest';
 import type { RootState, TNote, TNoteApiResponse, TSelectNotes } from 'types';
 import { type AppDispatch } from 'types';
@@ -63,7 +61,11 @@ export const handleDeleteNote =
   };
 
 export const handleUpdateNote =
-  (id: string | null, content: JSONContent, title?: string) =>
+  (id: string | null, content: string, title?: string) =>
   async (dispatch: AppDispatch): Promise<void> => {
-    const response = await rest.put(`http://localhost:3000/api/notes/${id}`, { title, content });
+    const response = await rest.put(`http://localhost:3000/api/notes/${id}`, {
+      title: title || '',
+      content
+    });
+    dispatch(handleGetNotes());
   };

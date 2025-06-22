@@ -1,5 +1,4 @@
 import { JSONContent } from '@tiptap/react';
-import type { EditorState, RawDraftContentState } from 'draft-js';
 
 import type { RootState } from './store';
 
@@ -14,7 +13,7 @@ export type TNoteApiResponse = {
 export type TNote = {
   id: string;
   title: string;
-  content: JSONContent;
+  content: string;
   createdAt: Date;
 };
 
@@ -25,7 +24,7 @@ export type TNoteItem = {
   [id: string]: {
     id: string;
     title: string;
-    content: JSONContent;
+    content: string;
     createdAt: Date;
   };
 };

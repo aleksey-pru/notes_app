@@ -22,7 +22,7 @@ const App = () => {
     return notesArray.reduce((acc, note) => {
       acc[note.id] = {
         ...note,
-        content: note.content || { type: 'doc', content: [] }
+        content: note.content
       };
       return acc;
     }, {} as TNoteItem);
@@ -43,19 +43,10 @@ const App = () => {
     setActiveId((prevId) => (prevId === id ? null : prevId));
   };
 
-  // const handleChangeNoteContent = (newContent: EditorState) => {
-  //   const id = activeId;
-  //   console.log(activeNote.content);
-  //   const content = newContent.getCurrentContent();
-  //   const rawContent = convertToRaw(content);
-  //   dispatch(handleUpdateNote(id, rawContent));
-  //   console.log(content.getPlainText());
-  // };
-
   const handleChangeNoteContent = (newContent: JSONContent) => {
     if (activeId) {
-      console.log(newContent);
-      dispatch(handleUpdateNote(activeId, newContent));
+      const currentTitle = notes[activeId]?.title || 'Untitled';
+      dispatch(handleUpdateNote(activeId, JSON.stringify(newContent), currentTitle));
     }
   };
 
