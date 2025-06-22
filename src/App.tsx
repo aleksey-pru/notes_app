@@ -32,7 +32,6 @@ const App = () => {
 
   const handleCreate = useCallback(() => {
     dispatch(handleCreateNote());
-    console.log('use dispatch to create note');
   }, [dispatch]);
 
   const handleDelete = (id: string) => {
