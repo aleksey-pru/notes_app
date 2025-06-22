@@ -48,7 +48,7 @@ export const handleGetNotes =
 export const handleCreateNote =
   (title: string, content: string) =>
   async (dispatch: AppDispatch): Promise<void> => {
-    const response = await rest.post('http://localhost:3000/api/notes', { title, content });
+    await rest.post('http://localhost:3000/api/notes', { title, content });
 
     dispatch(handleGetNotes());
   };
@@ -56,14 +56,14 @@ export const handleCreateNote =
 export const handleDeleteNote =
   (id: string) =>
   async (dispatch: AppDispatch): Promise<void> => {
-    const response = await rest.delete(`http://localhost:3000/api/notes/${id}`);
+    await rest.delete(`http://localhost:3000/api/notes/${id}`);
     dispatch(handleGetNotes());
   };
 
 export const handleUpdateNote =
   (id: string | null, content: string, title?: string) =>
   async (dispatch: AppDispatch): Promise<void> => {
-    const response = await rest.put(`http://localhost:3000/api/notes/${id}`, {
+    await rest.put(`http://localhost:3000/api/notes/${id}`, {
       title: title || '',
       content
     });

@@ -1,6 +1,4 @@
-import type { NoteProps } from './types.ts';
-
-const Note = ({ onUpdate }: NoteProps) => {
+const Note = () => {
   return <div className="min-h-[100px] p-2 text-stone-600 rounded"></div>;
 };
 
