@@ -1,4 +1,3 @@
-import { JSONContent } from '@tiptap/react';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
 import type { TNoteItem } from 'types';
@@ -43,7 +42,8 @@ const App = () => {
     setActiveId((prevId) => (prevId === id ? null : prevId));
   };
 
-  const handleChangeNoteContent = (newContent: JSONContent) => {
+  const handleChangeNoteContent = (newContent) => {
+    //todo put logic
     if (activeId) {
       const currentTitle = notes[activeId]?.title || 'Untitled';
       dispatch(handleUpdateNote(activeId, JSON.stringify(newContent), currentTitle));
