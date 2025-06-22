@@ -21,7 +21,12 @@ export type TNoteWithEditorState = Omit<TNote, 'content'> & {
   content: EditorState;
 };
 export type TNoteItem = {
-  [id: string]: TNoteWithEditorState;
+  [id: string]: {
+    id: string;
+    title: string;
+    content: string;
+    createdAt: Date;
+  };
 };
 
 export type TSelectNotes = (state: RootState) => TNote[];

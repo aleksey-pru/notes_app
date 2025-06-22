@@ -1,5 +1,4 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { ContentState, convertToRaw } from 'draft-js';
 import { rest } from 'services/rest';
 import type { RootState, TNote, TNoteApiResponse, TSelectNotes } from 'types';
 import { type AppDispatch } from 'types';
@@ -39,9 +38,37 @@ export const handleGetNotes =
     const normalizedNotes: TNote[] = response.notes.map((note) => ({
       id: note._id,
       title: note.title,
-      content: convertToRaw(ContentState.createFromText(note.content || '')),
+      content: note.content ? JSON.parse(note.content) : { type: 'doc', content: [] },
       createdAt: note?.createdAt
     }));
 
     dispatch(saveNotes(normalizedNotes));
+  };
+
+export const handleCreateNote =
+  () =>
+  async (dispatch: AppDispatch): Promise<void> => {
+    await rest.post('http://localhost:3000/api/notes', {
+      title: `Note ${new Date().toLocaleString()}`,
+      content: ''
+    });
+
+    dispatch(handleGetNotes());
+  };
+
+export const handleDeleteNote =
+  (id: string) =>
+  async (dispatch: AppDispatch): Promise<void> => {
+    await rest.delete(`http://localhost:3000/api/notes/${id}`);
+    dispatch(handleGetNotes());
+  };
+
+export const handleUpdateNote =
+  (id: string | null, content: string, title?: string) =>
+  async (dispatch: AppDispatch): Promise<void> => {
+    await rest.put(`http://localhost:3000/api/notes/${id}`, {
+      title: title || '',
+      content
+    });
+    dispatch(handleGetNotes());
   };

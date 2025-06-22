@@ -10,5 +10,8 @@ export const rest = {
   },
   post<TResponse, TData>(url: string, data?: TData): Promise<TResponse> {
     return request<TResponse, TData>(METHODS.post, { url, data });
+  },
+  put<TResponse, TData>(url: string, data?: TData): Promise<TResponse> {
+    return request<TResponse, TData>(METHODS.put, { url, data });
   }
 };

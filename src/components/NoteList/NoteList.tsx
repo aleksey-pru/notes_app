@@ -1,13 +1,19 @@
-import { FaTrash } from 'react-icons/fa';
-import type { TNote } from 'types';
+import { FaEdit, FaTrash } from 'react-icons/fa';
+import { RiAddLargeFill } from 'react-icons/ri';
+import type { TNoteWithEditorState } from 'types';
 
 import type { NoteListProps } from './types.ts';
-import { formatNoteDate } from './utils';
 
-const NoteList = ({ notes, activeId, setActiveId, onDelete }: NoteListProps) => {
+const NoteList = ({ notes, activeId, setActiveId, onDelete, onCreate }: NoteListProps) => {
   return (
     <>
-      <div className="max-w-md mx-auto flex justify-end p-2">
+      <div className="max-w-md mx-auto flex justify-end p-2 gap-5">
+        <button className="cursor-pointer">
+          <FaEdit size={20} />
+        </button>
+        <button type="button" className="cursor-pointer" onClick={onCreate}>
+          <RiAddLargeFill size={20} />
+        </button>
         <button
           type="button"
           aria-label="Delete item"
@@ -21,7 +27,7 @@ const NoteList = ({ notes, activeId, setActiveId, onDelete }: NoteListProps) => 
         </button>
       </div>
       <ul className="max-w-md mx-auto bg-stone-800 rounded-md shadow-md divide-y divide-gray-700">
-        {notes.map(({ id, title, createdAt }: TNote) => {
+        {notes.map(({ id, title }: TNoteWithEditorState) => {
           const isActive = activeId === id;
           return (
             <li
@@ -37,7 +43,7 @@ const NoteList = ({ notes, activeId, setActiveId, onDelete }: NoteListProps) => 
               <span
                 className={`block text-xs transition-colors duration-200, ${isActive ? 'text-black' : 'text-white'}`}
               >
-                {formatNoteDate(createdAt)}
+                {/*{formatNoteDate(createdAt)}*/}
               </span>
             </li>
           );
