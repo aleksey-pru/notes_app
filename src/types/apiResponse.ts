@@ -1,5 +1,5 @@
 import type { JSONContent } from '@tiptap/react';
-import type { EditorState, RawDraftContentState } from 'draft-js';
+import type { EditorState } from 'draft-js';
 
 import type { RootState } from './store';
 
