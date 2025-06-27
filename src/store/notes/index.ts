@@ -64,11 +64,9 @@ export const handleDeleteNote =
   };
 
 export const handleUpdateNote =
-  (id: string | null, content: string, title?: string) =>
-  async (dispatch: AppDispatch): Promise<void> => {
+  (id: string | null, content: string, title?: string) => async (): Promise<void> => {
     await rest.put(`http://localhost:3000/api/notes/${id}`, {
       title: title || '',
       content
     });
-    dispatch(handleGetNotes());
   };

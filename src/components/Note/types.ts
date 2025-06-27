@@ -1,4 +1,6 @@
+import type { JSONContent } from '@tiptap/react';
+
 export type NoteProps = {
-  content: string;
-  onUpdate: () => void;
+  content: JSONContent;
+  onUpdate: (newContent: JSONContent) => void;
 };
