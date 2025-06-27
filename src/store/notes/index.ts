@@ -70,5 +70,4 @@ export const handleUpdateNote =
       title: title || '',
       content
     });
-    dispatch(handleGetNotes());
   };
